@@ -9,6 +9,7 @@ import java.util.Optional;
 /**
  * User class creating user email/account.
  * Ex: firstname.lastname@department.company.com
+ * All new hire information is then submitted to database, and then all user information can be accessed.
  */
 public class User {
 
@@ -17,6 +18,7 @@ public class User {
     String department;
     int capacity;
     String password;
+    String employeeID
 
 
     public User(String firstName, String lastName, String department, String password, int capacity) {
@@ -27,14 +29,21 @@ public class User {
         this.capacity = capacity;
     }
 
-    public String getFirstName() {
+    private String getFirstName() {
         return firstName;
     }
 
-    public String getLastName() {
+    private String getLastName() {
         return lastName;
     }
 
+    public String getDepartment() {
+        return department;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 
     public int getCapacity() {
 
@@ -65,8 +74,12 @@ public class User {
         return password;
     }
 
-    public String constructEmail(String firstName, String lastName, String department) {
-        String email = firstName + "." + lastName + "@" + department + ".company.com";
+    /**
+     * Constructs email based off hire's name and department.
+     * @return user email
+     */
+    public String constructEmail() {
+        String email = getFirstName() + "." + getLastName() + "@" + getDepartment() + ".google.com";
 
         return email;
     }

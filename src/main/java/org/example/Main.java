@@ -16,6 +16,7 @@ public class Main {
          * their desired password. Generated password if none is selected.
          */
         try {
+
             System.out.println("Enter your first name: ");
             String firstName = scanner.next();
 
@@ -28,17 +29,24 @@ public class Main {
             System.out.println("Mail capacity: ");
             int capacity = scanner.nextInt();
 
-            System.out.println("Enter Password (Leave blank for random password):");
+            User newHire = new User(firstName, lastName, department, "", capacity);
+
+            System.out.println("Enter Password (Enter 'g' for generated password):");
             String password = scanner.next();
+            if (password.equals("g")) {
+                newHire.setPassword(newHire.generatePassword());
+            }else {
+                newHire.setPassword(password);
+            }
+
+            System.out.println("Your work email is : " + newHire.constructEmail());
+            System.out.println(newHire.getPassword());
+
 
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException("Wrong data input.");
         }
-
-
-//        User brandon = new User();
-
-
+        scanner.close();
     }
 }
