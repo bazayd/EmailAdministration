@@ -18,7 +18,7 @@ public class User {
     String department;
     int capacity;
     String password;
-    String employeeID
+    String employeeID;
 
 
     public User(String firstName, String lastName, String department, String password, int capacity) {
