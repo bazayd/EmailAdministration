@@ -10,12 +10,11 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Scanner;
 
+import static org.example.databaseConnect.databaseConnection;
+import static org.example.databaseConnect.insertValues;
+
 public class Main {
 
-    private static String driver = "com.mysql.jdbc.Driver";
-    private static String username = System.getenv("db_user");
-    private static String password = System.getenv("db_password");
-    private static String url = "jdbc:mysql://localhost:3306/new_hires";
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
@@ -25,69 +24,51 @@ public class Main {
          * their desired password. Generated password if none is selected.
          */
 
+        databaseConnect databaseConnect = new databaseConnect();
 
-        /*
-        Connection to
-         */
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            System.out.println("Database connected!");
 
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
 
-        try {
-            Class.forName(driver);
-            Connection connection = DriverManager.getConnection(url, username, password);
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM hire_info;");
-            if (resultSet.next()) {
-                String name = resultSet.getString("firstName");
-                System.out.println(name);
+
+
+
+            /**
+             * Ask user for all his information, such as name, department hired to, mail capacity,
+             * and desired password (randomly generated if none selected).
+             * Then all that information will be inserted into the appropriate SQL column in the hires
+             * database for security purposes.
+             */
+
+
+            System.out.println("Enter your first name: ");
+            String firstName = scanner.next();
+
+
+            System.out.println("Enter last name: ");
+            String lastName = scanner.next();
+
+            System.out.println("Department: ");
+            String department = scanner.next();
+
+            System.out.println("Mail capacity: ");
+            int capacity = scanner.nextInt();
+
+            User newHire = new User(firstName, lastName, department, "", capacity);
+
+            System.out.println("Enter Password (Enter 'g' for generated password):");
+            String password = scanner.next();
+            if (password.equals("g")) {
+                newHire.setPassword(newHire.generatePassword());
             }else {
-                System.out.println("Empty column values for new hire.");
+                newHire.setPassword(password);
             }
-            statement.close();
-            connection.close();
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+
+            String employeeEmail = newHire.constructEmail();
+            System.out.println("Your work email is : " + employeeEmail);
+            System.out.println(newHire.getPassword());
+
+            insertValues(3, firstName, lastName, department, password, capacity, employeeEmail);
 
 
-        try {
-
-
-
-//            System.out.println("Enter your first name: ");
-//            String firstName = scanner.next();
-//
-//            System.out.println("Enter last name: ");
-//            String lastName = scanner.next();
-//
-//            System.out.println("Department: ");
-//            String department = scanner.next();
-//
-//            System.out.println("Mail capacity: ");
-//            int capacity = scanner.nextInt();
-//
-//            User newHire = new User(firstName, lastName, department, "", capacity);
-//
-//            System.out.println("Enter Password (Enter 'g' for generated password):");
-//            String password = scanner.next();
-//            if (password.equals("g")) {
-//                newHire.setPassword(newHire.generatePassword());
-//            }else {
-//                newHire.setPassword(password);
-//            }
-//
-//            System.out.println("Your work email is : " + newHire.constructEmail());
-//            System.out.println(newHire.getPassword());
-
-
-
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Wrong data input.");
-        }
         scanner.close();
     }
 }
